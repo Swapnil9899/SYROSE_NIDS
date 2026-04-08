@@ -1,0 +1,19 @@
+# Core Dependencies
+scapy>=2.5.0
+pandas>=1.5.0
+numpy>=1.23.0
+scikit-learn>=1.2.0
+joblib>=1.2.0
+xgboost>=1.7.0
+streamlit>=1.20.0
+matplotlib>=3.6.0
+seaborn>=0.12.0
+customtkinter>=5.0.0
+pillow>=9.0.0
+
+# BankSec Enterprise Dependencies
+bcrypt>=4.0.0                # Password hashing and authentication
+ip2geotools>=0.1.6          # GeoIP lookup functionality
+python-whois>=0.8.0         # WHOIS information lookup
+reportlab>=4.0.0            # PDF export functionality
+pyyaml>=6.0.0               # Configuration file parsing

@@ -1,0 +1,303 @@
+# BankSec NIDS Configuration File
+# Version: 3.0.0 (Banking Edition)
+
+# ============================================================================
+# DATASET CONFIGURATION
+# ============================================================================
+dataset:
+  # Active dataset: 'NSL-KDD' or 'UNSW-NB15'
+  active: 'UNSW-NB15'
+  
+  # NSL-KDD Dataset Configuration
+  nsl_kdd:
+    data_path: 'data/nsl_kdd.csv'
+    classification_type: 'binary'  # binary or multiclass
+    features: 41
+    
+  # UNSW-NB15 Dataset Configuration
+  unsw_nb15:
+    data_path: 'data/UNSW-NB15/unsw_nb15_combined.csv'
+    train_path: 'data/UNSW-NB15/unsw_nb15_train_processed.csv'
+    test_path: 'data/UNSW-NB15/unsw_nb15_test_processed.csv'
+    classification_type: 'binary'  # binary or multiclass (using binary for better performance)
+    features: 47  # Excluding attack_cat and Label
+    
+    # Attack categories
+    attack_categories:
+      Normal: 0
+      Generic: 1
+      Exploits: 2
+      Fuzzers: 3
+      DoS: 4
+      Reconnaissance: 5
+      Analysis: 6
+      Backdoor: 7
+      Shellcode: 8
+      Worms: 9
+
+# ============================================================================
+# MODEL CONFIGURATION
+# ============================================================================
+model:
+  # Model type: 'random_forest', 'gradient_boosting', 'neural_network'
+  type: 'random_forest'
+  
+  # Model save path
+  save_path: 'model/'
+  model_file: 'nids_model.pkl'
+  scaler_file: 'scaler.pkl'
+  encoder_file: 'encoder.pkl'
+  
+  # Random Forest parameters
+  random_forest:
+    n_estimators: 100
+    max_depth: 20
+    min_samples_split: 5
+    min_samples_leaf: 2
+    random_state: 42
+    n_jobs: -1
+    class_weight: 'balanced'  # Handle imbalanced data
+  
+  # Training parameters
+  training:
+    test_size: 0.2
+    validation_split: 0.1
+    random_state: 42
+    stratify: true
+
+# ============================================================================
+# FEATURE ENGINEERING
+# ============================================================================
+features:
+  # Feature scaling method: 'standard', 'minmax', 'robust'
+  scaling_method: 'standard'
+  
+  # Feature selection
+  feature_selection:
+    enabled: false
+    method: 'importance'  # importance, correlation, pca
+    n_features: 30
+  
+  # Handle missing values
+  missing_values:
+    strategy: 'mean'  # mean, median, mode, zero
+  
+  # Handle categorical features
+  categorical_encoding:
+    method: 'label'  # label, onehot
+
+# ============================================================================
+# PACKET CAPTURE CONFIGURATION
+# ============================================================================
+packet_capture:
+  # Network interface (auto-detect if empty)
+  interface: ''
+  
+  # Packet buffer size
+  buffer_size: 1000
+  
+  # Capture timeout (seconds)
+  timeout: 1
+  
+  # Packet filter (BPF syntax)
+  filter: ''  # Empty = capture all
+  
+  # Promiscuous mode
+  promiscuous: true
+
+# ============================================================================
+# PREDICTION CONFIGURATION
+# ============================================================================
+prediction:
+  # Prediction threshold for binary classification
+  threshold: 0.5
+  
+  # Confidence threshold for alerts
+  confidence_threshold: 0.7
+  
+  # Batch prediction
+  batch_size: 10
+  
+  # Logging
+  log_predictions: true
+  log_path: 'logs/nids_log.txt'
+
+# ============================================================================
+# GUI CONFIGURATION
+# ============================================================================
+gui:
+  # Window settings
+  window:
+    width: 1600
+    height: 1000
+    title: 'QUILLBOT NIDS - AI-Powered Network Intrusion Detection'
+  
+  # Update intervals (milliseconds)
+  update_interval: 1000
+  chart_update_interval: 2000
+  
+  # Display settings
+  max_packets_display: 100
+  show_attack_types: true  # Show specific attack types (multiclass)
+  
+  # Theme
+  theme: 'dark'
+  color_scheme: 'cybersecurity'  # cybersecurity, professional, minimal
+
+# ============================================================================
+# LOGGING CONFIGURATION
+# ============================================================================
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: 'INFO'
+  
+  # Log file paths
+  main_log: 'logs/quillbot.log'
+  prediction_log: 'logs/nids_log.txt'
+  error_log: 'logs/errors.log'
+  
+  # Log format
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  
+  # Log rotation
+  rotation:
+    enabled: true
+    max_bytes: 10485760  # 10 MB
+    backup_count: 5
+
+# ============================================================================
+# PERFORMANCE CONFIGURATION
+# ============================================================================
+performance:
+  # Threading
+  num_threads: 4
+  
+  # Processing
+  max_queue_size: 1000
+  processing_timeout: 5
+  
+  # Memory management
+  max_memory_mb: 2048
+  
+  # Metrics
+  calculate_metrics: true
+  metrics_interval: 5  # seconds
+
+# ============================================================================
+# ALERT CONFIGURATION
+# ============================================================================
+alerts:
+  # Alert thresholds
+  intrusion_threshold: 1  # Number of intrusions to trigger alert
+  
+  # Alert actions
+  actions:
+    log: true
+    gui_notification: true
+    sound: false
+    email: false
+  
+  # Email configuration (if enabled)
+  email:
+    smtp_server: 'smtp.gmail.com'
+    smtp_port: 587
+    sender: ''
+    recipients: []
+    subject: 'QUILLBOT NIDS Alert'
+
+# ============================================================================
+# REPORTING CONFIGURATION
+# ============================================================================
+reporting:
+  # Generate reports
+  enabled: true
+  
+  # Report path
+  report_path: 'logs/final_report.txt'
+  
+  # Report format
+  format: 'text'  # text, json, html
+  
+  # Include sections
+  include:
+    summary: true
+    statistics: true
+    attack_breakdown: true
+    performance_metrics: true
+    recommendations: true
+
+# ============================================================================
+# ADVANCED CONFIGURATION
+# ============================================================================
+advanced:
+  # Debug mode
+  debug: false
+  
+  # Profiling
+  profiling:
+    enabled: false
+    output_path: 'logs/profile.txt'
+  
+  # Experimental features
+  experimental:
+    adaptive_threshold: false
+    anomaly_detection: false
+    deep_learning: false
+
+# ============================================================================
+# BANKSEC ENTERPRISE CONFIGURATION
+# ============================================================================
+banksec:
+  # Banking theme colors
+  theme:
+    primary_bg: "#0f1c2e"
+    secondary_bg: "#1a202c"
+    accent: "#2b6cb0"
+    text: "#e2e8f0"
+    alert_red: "#e53e3e"
+    alert_green: "#38a169"
+    alert_yellow: "#d69e2e"
+
+  # Security settings
+  security:
+    max_failed_attempts: 5
+    lockout_duration_minutes: 15
+    session_timeout_minutes: 60
+    password_min_length: 8
+
+  # Risk scoring configuration
+  risk_scoring:
+    critical_threshold: 90
+    high_threshold: 70
+    medium_threshold: 40
+    auto_popup_confidence: 0.95  # Auto-open forensic panel at 95% confidence
+
+  # Critical banking ports
+  critical_ports:
+    - 22      # SSH
+    - 443     # HTTPS
+    - 1433    # MS SQL Server
+    - 3306    # MySQL
+    - 5432    # PostgreSQL
+    - 8080    # HTTP Alternate
+    - 8443    # HTTPS Alternate
+    - 1521    # Oracle Database
+    - 27017   # MongoDB
+    - 6379    # Redis
+
+  # High-risk countries (ISO 3166-1 alpha-2 codes)
+  high_risk_countries:
+    - "CN"    # China
+    - "RU"    # Russia
+    - "KP"    # North Korea
+    - "IR"    # Iran
+    - "SY"    # Syria
+
+  # Forensic analysis settings
+  forensic:
+    max_stored_packets: 1000
+    export_formats:
+      - "PDF"
+      - "CSV"
+    auto_block_threshold: 95  # Auto-suggest blocking at 95+ risk score
+
